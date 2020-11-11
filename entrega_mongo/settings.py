@@ -84,13 +84,11 @@ WSGI_APPLICATION = 'entrega_mongo.wsgi.application'
 DATABASES = {
     "default": {
       "ENGINE": "djongo",
-      "NAME": os.getenv("MONGO_NAME"),
-      "host": os.getenv("MONGO_HOST"),
-      "port": os.getenv("MONGO_PORT"),
-      "username": os.getenv("MONGO_USER"),
-      "password": os.getenv("MONGO_PASSWORD"),
       "CLIENT": {
-           'host': os.getenv("MONGO_HOST"),
+           'host': 'mongodb+srv://admin:admin@cluster0.9ea2y.mongodb.net/Twitter?retryWrites=true&w=majority',
+           'username': 'admin',
+           'password': 'admin',
+           'authMechanism': 'SCRAM-SHA-1'
         }
     }
 }
