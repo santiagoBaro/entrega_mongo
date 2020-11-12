@@ -85,7 +85,7 @@ DATABASES = {
     "default": {
       "ENGINE": "djongo",
       "CLIENT": {
-           'host': 'mongodb+srv://admin:admin@cluster0.9ea2y.mongodb.net/Twitter?retryWrites=true&w=majority',
+           'host':  'mongodb+srv://admin:admin@cluster0.9ea2y.mongodb.net/djongo_test?retryWrites=true&w=majority',
            'username': 'admin',
            'password': 'admin',
            'authMechanism': 'SCRAM-SHA-1'

@@ -15,5 +15,5 @@ def get_message(id):
     return Message.objects.get(id=id)
 
 
-def get_messages_by_user(user_mail):
-    return Message.objects.filter(mail=user_mail)
+def get_messages_by_user(user):
+    return Message.objects.filter(user=user)

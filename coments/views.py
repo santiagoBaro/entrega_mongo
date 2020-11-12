@@ -1,20 +1,26 @@
 from pip._vendor.requests import Response
 from rest_framework.views import APIView
-from rest_framework import serializers, status
-
+from rest_framework import serializers
+from rest_framework import status
+from rest_framework.response import Response
 from coments.models import Message
 from coments.selectors import get_message, get_messages_by_user
 from coments.services import create_message, create_user, react_message
 
 
 class MesageDetailApi(APIView):
+    class InputSerializer(serializers.Serializer):
+        id = serializers.IntegerField()
     class OutputSerializer(serializers.ModelSerializer):
         class Meta:
             model = Message
             fields = ('id', 'user', 'message', 'likes', 'dislikes')
 
-    def get(self, request, message_id):
-        message = get_message(id=message_id)
+    def get(self, request):
+        serializer = self.InputSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        message = get_message(**serializer.validated_data)
 
         serializer = self.OutputSerializer(message)
 
@@ -22,17 +28,23 @@ class MesageDetailApi(APIView):
 
 
 class MesageListApi(APIView):
+    class InputSerializer(serializers.Serializer):
+        user = serializers.CharField()
+
     class OutputSerializer(serializers.ModelSerializer):
         class Meta:
             model = Message
             fields = ('id', 'user', 'message', 'likes', 'dislikes')
 
-    def get(self, request, user):
-        messages = get_messages_by_user(user_mail=user)
+    def get(self, request):
+        serializer = self.InputSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
 
-        serializer = self.OutputSerializer(messages)
+        messages = get_messages_by_user(**serializer.validated_data)
 
-        return Response(serializer.data)
+        serializer = self.OutputSerializer(messages, many=True)
+
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 class MessageCreateApi(APIView):
@@ -58,14 +70,14 @@ class UserCreateApi(APIView):
         serializer = self.InputSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
-        create_user(**serializer.validated_data)
+        user = create_user(**serializer.validated_data)
 
         return Response(status=status.HTTP_201_CREATED)
 
 
 class MessageReactionCreateApi(APIView):
     class InputSerializer(serializers.Serializer):
-        message_id = serializers.CharField()
+        message_id = serializers.IntegerField()
         reaction = serializers.CharField()
 
     def post(self, request):
