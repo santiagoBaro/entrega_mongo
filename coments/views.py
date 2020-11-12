@@ -27,8 +27,8 @@ class MesageListApi(APIView):
             model = Message
             fields = ('id', 'user', 'message', 'likes', 'dislikes')
 
-    def get(self, request, user_mail):
-        messages = get_messages_by_user(user_mail=user_mail)
+    def get(self, request, user):
+        messages = get_messages_by_user(user_mail=user)
 
         serializer = self.OutputSerializer(messages)
 
@@ -38,7 +38,7 @@ class MesageListApi(APIView):
 class MessageCreateApi(APIView):
     class InputSerializer(serializers.Serializer):
         mail = serializers.CharField()
-        message = serializers.TextField()
+        message = serializers.CharField()
 
     def post(self, request):
         serializer = self.InputSerializer(data=request.data)
